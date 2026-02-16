@@ -199,6 +199,7 @@ function getSelectedClip() {
  */
 function run(axiom, productionsJson, transformationsJson, generations, overwrite) {
   var clipInfo = getSelectedClip();
+
   if (!clipInfo) {
     post("Elsis4L: No selected MIDI clip.\n");
     return;
@@ -215,6 +216,7 @@ function run(axiom, productionsJson, transformationsJson, generations, overwrite
     productions = JSON.parse(productionsJson);
   } catch (e) {
     post("Elsis4L: Invalid productions JSON.\n");
+    post("Error: " + e + "\n");
     return;
   }
 
@@ -223,6 +225,7 @@ function run(axiom, productionsJson, transformationsJson, generations, overwrite
     transformations = JSON.parse(transformationsJson);
   } catch (e) {
     post("Elsis4L: Invalid transformations JSON.\n");
+    post("Error: " + e + "\n");
     return;
   }
 
@@ -241,7 +244,6 @@ function run(axiom, productionsJson, transformationsJson, generations, overwrite
 // Max js: respond to list with (axiom, productions, transformations, generations, overwrite)
 function list() {
   var a = arrayfromargs(arguments);
-  post("Elsis4L: list() called with arguments: " + a.join(", ") + "\n");
   if (a.length >= 5) {
     run(
       stripTextPrefix(a[0]),
