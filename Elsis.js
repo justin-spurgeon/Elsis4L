@@ -41,6 +41,14 @@ function parseArg(str) {
 }
 
 /**
+ * Remove leading "text" prefix from string arguments (Max list format).
+ */
+function stripTextPrefix(val) {
+  var s = String(val);
+  return (s.indexOf("text") === 0) ? s.substring(4) : s;
+}
+
+/**
  * Wrap value into inclusive [0, 127] for MIDI.
  */
 function wrapMidi(v) {
@@ -236,9 +244,9 @@ function list() {
   post("Elsis4L: list() called with arguments: " + a.join(", ") + "\n");
   if (a.length >= 5) {
     run(
-      String(a[0]),
-      String(a[1]),
-      String(a[2]),
+      stripTextPrefix(a[0]),
+      stripTextPrefix(a[1]),
+      stripTextPrefix(a[2]),
       parseInt(a[3], 10) || 0,
       a[4] ? true : false
     );
