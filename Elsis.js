@@ -233,6 +233,7 @@ function run(axiom, productionsJson, transformationsJson, generations, overwrite
 // Max js: respond to list with (axiom, productions, transformations, generations, overwrite)
 function list() {
   var a = arrayfromargs(arguments);
+  post("Elsis4L: list() called with arguments: " + a.join(", ") + "\n");
   if (a.length >= 5) {
     run(
       String(a[0]),
