@@ -107,19 +107,18 @@ function tokenizeDSL(str) {
  * Apply one DSL token to the turtle; optionally write to clip via clipApi.
  * clipApi: LiveAPI clip object; clipLength: number (beats).
  */
-function applyToken(turtle, token, clipLength, clipApi) {
+function applyToken(turtle, token, clipLength, clipApi, notes) {
   var op = token.op;
   var arg = token.arg;
   if (op === "w") {
     if (clipApi) {
-      var notes = [{
+      notes.push({
         pitch: turtle.pitch,
         start_time: turtle.start_time,
         duration: turtle.duration,
         velocity: turtle.velocity,
         release_velocity: turtle.release_velocity
-      }];
-      clipApi.call("add_new_notes", { notes: notes });
+      });
     }
     return;
   }
@@ -170,9 +169,11 @@ function applyToken(turtle, token, clipLength, clipApi) {
  */
 function runDSL(turtle, dslString, clipLength, clipApi) {
   var tokens = tokenizeDSL(dslString);
+  var notes = [];
   for (var i = 0; i < tokens.length; i++) {
-    applyToken(turtle, tokens[i], clipLength, clipApi);
+    applyToken(turtle, tokens[i], clipLength, clipApi, notes);
   }
+  clipApi.call("add_new_notes", { notes: notes });
 }
 
 /**
