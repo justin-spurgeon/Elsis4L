@@ -35,7 +35,7 @@ function parseArg(str) {
   if (slash >= 0) {
     var num = parseFloat(str.substring(0, slash));
     var den = parseFloat(str.substring(slash + 1));
-    return den !== 0 ? num / den : 0;
+    return den != 0 ? num / den : 0;
   }
   return parseFloat(str);
 }
@@ -180,11 +180,10 @@ function runDSL(turtle, dslString, clipLength, clipApi) {
  * Returns { clip: LiveAPI, length: number } or null if no clip selected / not MIDI.
  */
 function getSelectedClip() {
-  var slotApi = new LiveAPI("live_set view selected_clip_slot");
-  if (slotApi.get("has_clip") !== 1) return null;
+  var slotApi = new LiveAPI("live_set tracks 0 clip_slots 0");
   var clipPath = slotApi.unquotedpath + " clip";
   var clip = new LiveAPI(clipPath);
-  if (clip.get("is_midi_clip") !== 1) return null;
+  if (clip.get("is_midi_clip") != 1) return null;
   var length = parseFloat(clip.get("length"));
   return { clip: clip, length: length };
 }
