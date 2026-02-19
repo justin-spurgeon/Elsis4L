@@ -73,7 +73,7 @@ function wrapTime(v, clipLength) {
  */
 function makeTurtle() {
   return {
-    pitch: 64,
+    pitch: 24,
     duration: 0.25,
     velocity: 100,
     release_velocity: 100,
@@ -167,13 +167,11 @@ function applyToken(turtle, token, clipLength, clipApi, notes) {
 /**
  * Run a DSL pipeline (left to right) on the turtle.
  */
-function runDSL(turtle, dslString, clipLength, clipApi) {
+function runDSL(turtle, dslString, clipLength, clipApi, notes) {
   var tokens = tokenizeDSL(dslString);
-  var notes = [];
   for (var i = 0; i < tokens.length; i++) {
     applyToken(turtle, tokens[i], clipLength, clipApi, notes);
   }
-  clipApi.call("add_new_notes", { notes: notes });
 }
 
 /**
@@ -231,14 +229,18 @@ function run(axiom, productionsJson, transformationsJson, generations, overwrite
 
   var lstring = expandLSystem(axiom, productions, generations, MAX_LSYSTEM_LENGTH);
   var turtle = makeTurtle();
+  var notes = [];
 
   for (var i = 0; i < lstring.length; i++) {
     var c = lstring.charAt(i);
     var dsl = transformations[c];
     if (dsl === undefined) continue;
     if (typeof dsl !== "string") dsl = String(dsl);
-    runDSL(turtle, dsl, clipLength, clip);
+    runDSL(turtle, dsl, clipLength, clip, notes);
   }
+
+  clip.call("add_new_notes", { notes: notes });
+  post("\nNotes added: " + notes.length);
 }
 
 // Max js: respond to list with (axiom, productions, transformations, generations, overwrite)
